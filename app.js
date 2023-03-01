@@ -16,7 +16,7 @@ const numInPathPositionLeftRange = [11,25];
 const GAME_OVER_INTERVAL_VALUE = 31000;
 const initialRoadSecondsDuration = 130;
 const clockElement = document.getElementById("clock");
-const INITIAL_TARGET_NUMBER = 20;
+const INITIAL_TARGET_NUMBER = 10;
 const INITIAL_NUMBER = 0
 
 var gameOverCountDown = GAME_OVER_INTERVAL_VALUE / 1000
@@ -26,6 +26,7 @@ var aggregatedValue = 0;
 var moves = 0;
 var percentage = 0;
 var coins = 0;
+var misses = 0
 var speedOfFallingFactor = 1;
 var gameScreenWidth;
 
@@ -43,6 +44,7 @@ function gameLoop() {
 
         // if item overlap screen, remove it
         if(itemTop > 100) {
+            miss()
             dynamicItemsManagerInstance.removeItemById(currentDynamicItem)
             return;
         }
@@ -152,6 +154,10 @@ function generateNewTargetNumber() {
     document.getElementById('target-num').innerHTML = targetNumber;
 }
 
+function miss() {
+    misses++
+    console.log(misses)
+}
 
 function checkKey(e) {
 
@@ -206,7 +212,7 @@ function reset() {
     aggregatedValue = INITIAL_NUMBER;
     percentage = 0
     gameOverCountDown = GAME_OVER_INTERVAL_VALUE / 1000;
-    dynamicItemsManagerInstance.removeAll();
+    // dynamicItemsManagerInstance.removeAll();
     progressBarInstance.reset(targetNumber)
 }
 
@@ -227,6 +233,10 @@ function startGameAfterGuide() {
     gameLoopInterval = setInterval(gameLoop, 50);
     dynamicItemsManagerInstance = new dynamicItemsManager(pathNum, numInPathPositionLeftRange)
     dynamicItemsManagerInstance.initTimeout();
+    //initGameOver();
+}
+
+function initGameOver() {
     gameOverInterval = setInterval(countDownToGameOver, 1000)
     gameOverCountDown = GAME_OVER_INTERVAL_VALUE / 1000
 }

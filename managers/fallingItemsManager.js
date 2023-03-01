@@ -4,8 +4,9 @@ class dynamicItemsManager {
     generateItemsTimeout;
     pathsCount;
     currentInstance;
-    fruits = ["129373", "129365", "129382"]
-    speedInceasedNum = 1000; // initial value should be aligned with 'fallingNum' css class
+    fruits = ["129373", "129365", "129382", "129381", "127827", "127815"]
+    intervalDelay = 800
+    speedInceasedNum = 58; // initial value should be aligned with 'fallingNum' css class
     itemTypes = {
         REGULAR_NUM: "REGULAR_NUM",
         OBSTACLE: "OBSTACLE",
@@ -54,14 +55,11 @@ class dynamicItemsManager {
 
     randomizeItemType() {
         var d = Math.random();
-        if (d < 0.6)
+        if (d < 0.9)
             // 50% chance of being here
             return "REGULAR_NUM"
-        else if (d < 0.95)
+        else
             return "OBSTACLE"
-        else {
-            return "GOLD"
-        }
     }
 
     createDynamicItems() {
@@ -95,7 +93,8 @@ class dynamicItemsManager {
             const newDynamicItem = newItemsPerPath[itemIdx]
             const itemSpeed = this.randomizeSpeed()
             const animationDuration = `animation-duration: ${itemSpeed}s; -webkit-animation-duration: ${itemSpeed}s; -moz-animation-duration: ${itemSpeed}s; -o-animation-duration: ${itemSpeed}s;`
-            const htmlItem = `<div style="left: ${randomIntFromInterval(numInPathPositionLeftRange[0], numInPathPositionLeftRange[1])}%; ${animationDuration}"
+            const top = this.randomizeTop()
+            const htmlItem = `<div style="top: ${top}%; left: ${randomIntFromInterval(numInPathPositionLeftRange[0], numInPathPositionLeftRange[1])}%; ${animationDuration}"
                                     item-id="${newDynamicItem.id}" 
                                     id="${newDynamicItem.id}"
                                     class='fallingNumber noselect ${newDynamicItem.class}'>${newDynamicItem.displayValue}<div>`
@@ -108,14 +107,18 @@ class dynamicItemsManager {
             this.currentDynamicItems[newDynamicItem.id] = newDynamicItem;
         }
       
-      this.generateItemsTimeout = setTimeout(this.generateNewNumberItem.bind(this), 800);
+      this.generateItemsTimeout = setTimeout(this.generateNewNumberItem.bind(this), this.intervalDelay);
     }
 
     prepateRegularNum(item) {
         const isPlus = !isOverlappingTargetNumber()
         item.operator = isPlus ? "plus" : "minus";
-        item.numericValue = 1//randomIntFromInterval(1, 10)
+        item.numericValue = 5//randomIntFromInterval(1, 10)
         item.displayValue = `&#${this.randomizeFruit()};`
+    }
+
+    levelIncreased() {
+        this.intervalDelay -= 25
     }
 
     randomizeFruit() {
@@ -168,7 +171,12 @@ class dynamicItemsManager {
     // this method created so the items will be dynamic with a small gap
     // and not falling together at the same line
     randomizeSpeed() { 
+        return this.speedInceasedNum - (coins * 3)
         randomIntFromInterval(this.speedInceasedNum - 0.1, this.speedInceasedNum + 0.1)
+    }
+
+    randomizeTop() {
+        return randomIntFromInterval(0, -8)
     }
 
     increaseSpeed() {

@@ -278,7 +278,7 @@ div#welcome {
   }  
 
   .main {
-    background-color: white;
+    background-color: #88cfff;
     background-repeat-y: repeat;
     background-position-y: 27px;
     background-position-x: 50%;
@@ -289,6 +289,16 @@ div#welcome {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.main::after {
+  position: absolute;
+  width: 100%;
+  height: 16%;
+  background-color: #309332;
+  z-index: 0;
+  content: ' ';
+  bottom: -4%;
 }
 
 
